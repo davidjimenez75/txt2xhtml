@@ -110,7 +110,7 @@ foreach ($lines as $key => $file)
 
 // TOC
 echo '<div id="toc" class="hidden-print">';
-echo '<h1><a href="./index.php">md2xhtml</a></h1>';
+echo "\r\n".'<h1><a href="./index.php">md2xhtml</a></h1>';
 $line=0;
 $a_summary=explode("\r\n", $summary);
 foreach ($a_summary as $key=>$val)
@@ -120,7 +120,7 @@ foreach ($a_summary as $key=>$val)
         preg_match_all('/\((.*?)\)/', $val, $a_temp);
         $file=@substr($a_temp[0][0],1,-1);
         $file=trim($file);
-        echo '<a href="#'.strtolower(substr(str_replace('/','/',$file),strlen($folder)+1)).'">'.substr(str_replace('/','/',$file),strlen($folder)+1).'</a><br>';
+        echo "\r\n".'<a href="#'.strtolower(substr(str_replace('/','/',$file),strlen($folder)+1)).'">'.substr(str_replace('/','/',$file),strlen($folder)+1).'</a><br>';
     }
     $line++;
 }
@@ -139,8 +139,10 @@ foreach ($a_summary as $key=>$val)
             $file=$a_temp[0][0];
             $file=trim($file);
             $file=substr($file,1,-1);
-            echo '<center><a id="'.strtolower(substr(str_replace('/','/',$file),strlen($folder)+1)).'"></a>';
+            echo "\r\n\r\n".'<center><a id="'.strtolower(substr(str_replace('/','/',$file),strlen($folder)+1)).'"></a>';
+            echo "\r\n\r\n";
             echo '<div id="titulo"><a href="'.$folder.'/'.substr($file, 7).'" target="_blank">#FILE: '.substr(str_replace('/','/',$file),strlen($folder)+1).'</a></div></center>';
+            echo "\r\n\r\n";
             $markdown=file_get_contents($file);
            
             // MD2HTML
@@ -151,7 +153,7 @@ foreach ($a_summary as $key=>$val)
             fwrite($fp, $xhtml_header);
                       
             // MODIFICATIONS PER LINE
-            $a_output=explode("\n",$output);
+            $a_output=explode("\r\n",$output);
             $output_temp="";
             foreach ($a_output as $key=>$eachline){        
                 // CENTER ALL IMAGES
