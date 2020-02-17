@@ -64,6 +64,7 @@ $Parsedown = new Parsedown();
  */
 $folder = "./pages";
 $a_files = find_all_files($folder);
+
 $s_files = "";
 if (isset($_POST["search"]))
 {
@@ -73,7 +74,7 @@ if (isset($_POST["search"]))
 }
 
 // IGNORED FILES
-$a_ignored=array("applications.html","bitnami.css", "favicon.ico", "./pages/changelog/ejemplos/xampp.txt");
+$a_ignored=array("applications.html","bitnami.css", "favicon.ico", ".gitignore", "./pages/changelog/ejemplos/xampp.txt");
 
 // FILTER LIST STRING
 if (sizeof($a_files) > 0)
@@ -81,7 +82,7 @@ if (sizeof($a_files) > 0)
     foreach ($a_files as $key => $file) 
     {
         // not in ignored array + $search string + not .xhtml file + just .md files
-        if ( (!in_array($file, $a_ignored)) && (substr_count($file, $search)) && (substr($file,-6)!=".xhtml") && (substr($file,-3)==".md")  )
+        if ( (!in_array($file, $a_ignored)) && (substr_count($file, $search)) && (substr($file,-6)!=".xhtml") && (substr($file,-3)==".md") )
         {
             $s_files .= '' . $file."\r\n";
         }
@@ -90,7 +91,7 @@ if (sizeof($a_files) > 0)
     $s_files .= "ERROR: No files found.\r\n";
     die("Add *.md files inside $folder folder.");
 }
-//echo $s_files; // DEBUG
+//echo nl2br($s_files); // DEBUG
 
 // SUMMARY
 $summary= "# Summary\n\n";
@@ -129,7 +130,6 @@ echo '</div>';
 $line=0;
 foreach ($a_summary as $key=>$val)
 {
-
     if ($line>=0)
     {
         if (strlen($val)>1)
@@ -198,17 +198,30 @@ foreach ($a_summary as $key=>$val)
 // FUNCTIONS
 function find_all_files($dir)
 {
+    $result=array();
     $root = scandir($dir);
     foreach($root as $value)
     {
-        if($value === '.' || $value === '..') {continue;}
-        if(is_file("$dir/$value")) {$result[]="$dir/$value";continue;}
-        foreach(find_all_files("$dir/$value") as $value)
+        if($value === '.' || $value === '..' || $value === '.gitignore' || substr_count($dir,'.git') || substr_count($dir,'.svn')  ) 
         {
-            $result[]=$value;
+            continue;
         }
+        if(is_file("$dir/$value")) {
+            if (substr($value,-3)=='.md')
+            {
+                $result[]="$dir/$value";
+            }
+            continue;
+        }
+        if ($value!=".git"){
+            foreach(find_all_files("$dir/$value") as $value)
+            {
+                $result[]=$value;
+            }
+        }
+
     }
-    return $result;
+    return $result;    
 }
 
 
