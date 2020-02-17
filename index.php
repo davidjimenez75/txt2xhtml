@@ -10,7 +10,7 @@ require_once 'vendor/autoload.php';
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>wikis</title>
+        <title>md2xhtml</title>
         
 
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
@@ -108,8 +108,8 @@ foreach ($lines as $key => $file)
 }
 
 // TOC
-echo '<div id="toc">';
-echo '<h1>Text</h1>';
+echo '<div id="toc" class="hidden-print">';
+echo '<h1><a href="./index.php">md2xhtml</a></h1>';
 $line=0;
 $a_summary=explode("\r\n", $summary);
 foreach ($a_summary as $key=>$val)
@@ -139,9 +139,8 @@ foreach ($a_summary as $key=>$val)
             $file=$a_temp[0][0];
             $file=trim($file);
             $file=substr($file,1,-1);
-            echo '<hr class="new-page">';// FORCES NEW PAGE 
-            echo '<br><br><center><a id="'.strtolower(substr(str_replace('/','/',$file),strlen($folder)+1)).'"></a>';
-            echo '<div id="titulo"><a href="'.$folder.'/'.substr($file, 7).'" target="_blank">#FILE: '.substr(str_replace('/','/',$file),strlen($folder)+1).'</a></div></center><br>';
+            echo '<center><a id="'.strtolower(substr(str_replace('/','/',$file),strlen($folder)+1)).'"></a>';
+            echo '<div id="titulo"><a href="'.$folder.'/'.substr($file, 7).'" target="_blank">#FILE: '.substr(str_replace('/','/',$file),strlen($folder)+1).'</a></div></center>';
             $markdown=file_get_contents($file);
            
             // MD2HTML
@@ -185,6 +184,7 @@ foreach ($a_summary as $key=>$val)
             }
             fwrite($fp, $xhtml_footer);
             fclose($fp);            
+            echo '<hr class="new-page">';// FORCES NEW PAGE 
         }
     }
     $line++;
