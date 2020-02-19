@@ -6,10 +6,12 @@ error_reporting(E_ALL);
 require_once 'config.php';
 require_once 'vendor/autoload.php';
 /**
- * CONFIG
+ * CONFIG OPTIONS
  */
-$option_show_path_on_header=true; // show the filename path on the header. Is printed to easily identify every content.
 $option_show_link_to_file=true; // show a red link on top of every file content (will be ignored on printing).
+$option_show_path_on_header=false; // show the filename path on the header (will be printed)
+$option_procces_txt_as_markdown=false; // process .txt files like as markdown
+$option_new_page_after_every_file=true;  // new page after the content of every file ( false = continuous content printing )
 
 ?><!DOCTYPE HTML>
 <html lang="es" class="sidebar-visible no-js">
@@ -159,23 +161,38 @@ foreach ($a_summary as $key=>$val)
             {
                 echo '<p style="color:red"><small><b>'.substr($file,strlen($folder)).'</b></small></p>';
             }
+            
+            // READING FILE
             $output=file_get_contents($file);
            
-            
+            // .MD FILEs
             if (substr($file,-3)==".md")
             { 
                 // MARKDOWN PARSED TO HTML
                 $output= $Parsedown->text($output);
+                $output=str_replace("\n","\r\n",$output);// convert Mac/Linux to windows 
             }
+
+            // .TXT FILES
+            // OPTIONAL - process .txt files like as markdown
+            if ($option_procces_txt_as_markdown && (substr($file,-4)==".txt"))
+            {
+                $output=str_replace("\r\n","\r\n\r\n",$output);
+                $output= $Parsedown->text($output);
+            }
+
+
+
 
             // SAVING TO .xhtml
             $fp = fopen(substr($file,0,strrpos($file,'.')).'.xhtml', 'w');
             fwrite($fp, $xhtml_header);
                       
             // MODIFICATIONS PER LINE
-            $a_output=explode("\n",$output);
+            $a_output=explode("\n",$output);// DONT CHANGE OR FAIL WITH MARKDOWN CODE LABELS
             $output_temp="";
             foreach ($a_output as $key=>$eachline){        
+
                 // CENTER ALL IMAGES?
                 if (substr_count($eachline, '<img ')>0)
                 {
@@ -195,6 +212,13 @@ foreach ($a_summary as $key=>$val)
                     $eachline=str_replace('src="./assets/','src="../Images/',$eachline);
                 }
 
+                // CORRECT WIKIS IMAGE LINKS FOR XHTML EPUB's
+                if (substr_count($eachline, 'src="./')>0)
+                {
+                    $eachline=str_replace('src="./','src="../Images/',$eachline);
+                }
+
+
                 // DOKUWIKI INDEX (REMOVED)
                 if (substr_count($eachline, '{{indexmenu')>0)
                 {
@@ -208,23 +232,28 @@ foreach ($a_summary as $key=>$val)
                }
 
                 // SAVING XHTML                
-                fwrite($fp, $eachline."\r\n\r\n");
+                fwrite($fp, $eachline."\r\n");
 
                 // MODIFICATIONS FOR SCREEN - NOT SAVED TO XHTML
 
                 // CORRECT RELATIVE IMAGES
                 if (substr_count($eachline, 'src="../Images/')>0)
                 {
-                    $eachline=str_replace('src="../Images/','src="'.substr($file,0,strrpos($file,'/')).'/../Images/',$eachline);
+                    $eachline=str_replace('src="../Images/','src="'.substr($file,0,strrpos($file,'/')).'/',$eachline);
                 }
+                
 
                 // SHOWED ON SCREEN
                 echo $eachline;
                 
             }
             fwrite($fp, $xhtml_footer);
-            fclose($fp);            
-            echo '<hr class="new-page">';// FORCES NEW PAGE 
+            fclose($fp);
+
+            if ($option_new_page_after_every_file)
+            {
+                echo '<hr class="new-page" style="border:1px solid white!important">';// FORCES NEW PAGE 
+            }
         }
     }
     $line++;
