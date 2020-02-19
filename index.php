@@ -12,13 +12,13 @@ require_once 'vendor/autoload.php';
         <meta charset="UTF-8">
         <title>md2xhtml</title>
         
-
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
 
         <link rel="shortcut icon" href="favicon.png">
+
         <link rel="stylesheet" href="css/variables.css">
         <link rel="stylesheet" href="css/general.css">
         <link rel="stylesheet" href="css/chrome.css">
@@ -70,7 +70,7 @@ if (isset($_POST["search"]))
 {
     $search=$_POST["search"];
 }else{
-    $search=".md";
+    $search=".";
 }
 
 // IGNORED FILES
@@ -82,7 +82,7 @@ if (sizeof($a_files) > 0)
     foreach ($a_files as $key => $file) 
     {
         // not in ignored array + $search string + not .xhtml file + just .md files
-        if ( (!in_array($file, $a_ignored)) && (substr_count($file, $search)) && (substr($file,-6)!=".xhtml") && (substr($file,-3)==".md") )
+        if ( (!in_array($file, $a_ignored)) && (substr_count($file, $search)) && (substr($file,-6)!=".xhtml") &&  ( (substr($file,-3)==".md") || (substr($file,-4)==".txt"))  )
         {
             $s_files .= '' . $file."\r\n";
         }
@@ -102,6 +102,7 @@ foreach ($lines as $key => $file)
     {
         $title=substr($file,strlen($folder)+1);
         $title=str_replace('.md','',$title);
+        $title=str_replace('.txt','',$title);
         $title=trim($title);
         $link=substr($file,strlen($folder));
         $summary.= "- [".$title."](./pages".$link.")\r\n";
@@ -143,13 +144,14 @@ foreach ($a_summary as $key=>$val)
             echo "\r\n\r\n";
             echo '<div id="titulo"><a href="'.$folder.'/'.substr($file, 7).'" target="_blank">#FILE: '.substr(str_replace('/','/',$file),strlen($folder)+1).'</a></div></center>';
             echo "\r\n\r\n";
+            echo $file."<br>";
             $markdown=file_get_contents($file);
            
             // MD2HTML
             $output= $Parsedown->text($markdown);
 
             // SAVING TO .xhtml
-            $fp = fopen(substr(strtolower($file),0,-3).'.xhtml', 'w');
+            $fp = fopen(substr(strtolower($file),0,strrpos($file,'.')).'.xhtml', 'w');
             fwrite($fp, $xhtml_header);
                       
             // MODIFICATIONS PER LINE
@@ -209,7 +211,7 @@ function find_all_files($dir)
             continue;
         }
         if(is_file("$dir/$value")) {
-            if (substr($value,-3)=='.md')
+            if ((substr($value,-3)=='.md') || (substr($value,-4)=='.txt'))
             {
                 $result[]="$dir/$value";
             }
