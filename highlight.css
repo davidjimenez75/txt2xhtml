@@ -77,3 +77,45 @@
   color: #b31d28;
   background-color: #ffeef0;
 }
+
+
+
+
+
+
+/* HIGHLIGHTS COLORS */
+.red {
+    box-shadow: rgb(255, 128, 128) 0px 0px 0.35em;
+    background-color: rgba(255, 128, 128, 0.8) !important;
+    color: rgb(0, 0, 0) !important;
+}
+.orange {
+    box-shadow: rgb(255, 210, 170) 0px 0px 0.35em;
+    background-color: rgba(255, 210, 170, 0.8) !important;
+    color: rgb(0, 0, 0) !important;
+}
+.yellow {
+    box-shadow: rgb(255, 255, 170) 0px 0px 0.35em;
+    background-color: rgba(255, 255, 170, 0.8) !important;
+    color: rgb(0, 0, 0) !important;
+}
+.green {
+    box-shadow: rgb(170, 255, 170) 0px 0px 0.35em;
+    background-color: rgba(170, 255, 170, 0.8) !important;
+    color: rgb(0, 0, 0) !important;
+}
+.cyan {
+    box-shadow: rgb(170, 255, 255) 0px 0px 0.35em;
+    background-color: rgba(170, 255, 255, 0.8) !important;
+    color: rgb(0, 0, 0) !important;
+}
+.purple {
+    box-shadow: rgb(255, 170, 255) 0px 0px 0.35em;
+    background-color: rgba(255, 170, 255, 0.8) !important;
+    color: rgb(0, 0, 0) !important;
+}
+.grey {
+    box-shadow: rgb(119, 119, 119) 0px 0px 0.35em;
+    background-color: rgba(119, 119, 119, 0.8) !important;
+    color: rgb(255, 255, 255) !important;
+}
