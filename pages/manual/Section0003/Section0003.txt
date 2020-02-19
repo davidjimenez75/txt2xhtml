@@ -1,0 +1,40 @@
+<h1>TXT SANDBOX</h1>
+<h2> Compatible with *.txt files </h2>
+<img src="./txt.png">
+This is just a sample of a plain file in .TXT 
+You can play around with your own texts right here.
+You can also use HTML if you want in plain txt files to be converter to XHTML
+<hr><h1>h1</h1>
+<hr><h2>h2</h2>
+<hr><h3>h3</h3>
+<hr><h4>h4</h4>
+<hr><h5>h5</h5>
+<hr><h6>h6</h6>
+<hr><p>Paragraph</p>
+<hr><b>Bold</b>
+<hr><i>Italic</i>
+<hr><u>Underline</u>
+<hr><del>Strikethrough</del>
+<hr><sub>Subscript</sub>
+<hr><sup>Superscript</sup>
+<hr><p style="text-align: left;">Align left</p>
+<hr><p style="text-align: center;">Align center</p>
+<hr><p style="text-align: right;">Align Right</p>
+<hr><p style="text-align: justify;"><b>Justify</b> - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+<hr><ul>
+    <li>Unordered list</li>
+    <li>Unordered list</li>
+</ul>
+<hr><ol>
+    <li>Ordered list</li>
+    <li>Ordered list</li>
+</ol>
+<hr><blockquote>
+    <p style="text-align: justify;"><b>Indent 1</b> - Justify Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+</blockquote>
+<hr><blockquote>
+    <blockquote>
+    <p style="text-align: justify;"><b>Indent 2</b> - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+</blockquote>
+</blockquote>
+<hr>
