@@ -5,6 +5,12 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 require_once 'config.php';
 require_once 'vendor/autoload.php';
+/**
+ * CONFIG
+ */
+$option_show_path_on_header=true; // show the filename path on the header. Is printed to easily identify every content.
+$option_show_link_to_file=true; // show a red link on top of every file content (will be ignored on printing).
+
 ?><!DOCTYPE HTML>
 <html lang="es" class="sidebar-visible no-js">
     <head>
@@ -34,8 +40,7 @@ require_once 'vendor/autoload.php';
         <!-- <link rel="stylesheet" href="tomorrow-night.css"> -->
         <!-- <link rel="stylesheet" href="ayu-highlight.css">  -->
 
-        <!-- Custom theme stylesheets -->
-        
+        <!-- Custom theme stylesheets --> 
         <link rel="stylesheet" href="custom.css">
         
 
@@ -44,12 +49,15 @@ require_once 'vendor/autoload.php';
    <body>
 
 
+<div id="searchbox" style="float:right;" class="hidden-print">
+<form action="./index.php" method="post">
+  <input type="text" name="search" value=""><input type="submit" value="Search">
+</form>
+</div>
 
 <?php
-require_once("mdbooks.php");
-//echo "<hr>";
 /***
- * wikimd2html
+ * txt2xhtml
  *
  * composer require erusev/parsedown
  */
@@ -57,9 +65,7 @@ require_once("mdbooks.php");
 $Parsedown = new Parsedown();
 
 /**
- * APUNTES
- * 
- * Locate all apuntes files an creates a book
+ * Locates all files (*.txt + *.md) under $folder recursively
  * 
  */
 $folder = "./pages";
@@ -140,25 +146,37 @@ foreach ($a_summary as $key=>$val)
             $file=$a_temp[0][0];
             $file=trim($file);
             $file=substr($file,1,-1);
-            echo "\r\n\r\n".'<center><a id="'.strtolower(substr(str_replace('/','/',$file),strlen($folder)+1)).'"></a>';
+            echo "\r\n\r\n".'<center><a id="'.strtolower(substr(str_replace('/','/',$file),strlen($folder)+1)).'"></a></center>';
             echo "\r\n\r\n";
-            echo '<div id="titulo"><a href="'.$folder.'/'.substr($file, 7).'" target="_blank">#FILE: '.substr(str_replace('/','/',$file),strlen($folder)+1).'</a></div></center>';
+            // OPTIONAL - show original filename link
+            if ($option_show_link_to_file)
+            {
+                echo '<center><div id="titulo"><a href="'.$folder.'/'.substr($file, 7).'" target="_blank">#FILE: '.substr(str_replace('/','/',$file),strlen($folder)+1).'</a></div></center>';
+            }
             echo "\r\n\r\n";
-            echo $file."<br>";
-            $markdown=file_get_contents($file);
+            // OPTIONAL - show filename path on header
+            if  ($option_show_path_on_header)
+            {
+                echo '<p style="color:red"><small><b>'.substr($file,strlen($folder)).'</b></small></p>';
+            }
+            $output=file_get_contents($file);
            
-            // MD2HTML
-            $output= $Parsedown->text($markdown);
+            
+            if (substr($file,-3)==".md")
+            { 
+                // MARKDOWN PARSED TO HTML
+                $output= $Parsedown->text($output);
+            }
 
             // SAVING TO .xhtml
-            $fp = fopen(substr(strtolower($file),0,strrpos($file,'.')).'.xhtml', 'w');
+            $fp = fopen(substr($file,0,strrpos($file,'.')).'.xhtml', 'w');
             fwrite($fp, $xhtml_header);
                       
             // MODIFICATIONS PER LINE
-            $a_output=explode("\r\n",$output);
+            $a_output=explode("\n",$output);
             $output_temp="";
             foreach ($a_output as $key=>$eachline){        
-                // CENTER ALL IMAGES
+                // CENTER ALL IMAGES?
                 if (substr_count($eachline, '<img ')>0)
                 {
                     $eachline='<center>'.$eachline.'</center>';
@@ -182,9 +200,27 @@ foreach ($a_summary as $key=>$val)
                 {
                     $eachline="<p>&nbsp;</p>";
                 }
+                
+               // TXT PROCESSING BEFORE SAVING TO XHTML
+               if (substr($file,-4)==".txt")
+               { 
+                   $eachline=nl2br($eachline);
+               }
 
-                echo $eachline;
+                // SAVING XHTML                
                 fwrite($fp, $eachline."\r\n\r\n");
+
+                // MODIFICATIONS FOR SCREEN - NOT SAVED TO XHTML
+
+                // CORRECT RELATIVE IMAGES
+                if (substr_count($eachline, 'src="../Images/')>0)
+                {
+                    $eachline=str_replace('src="../Images/','src="'.substr($file,0,strrpos($file,'/')).'/../Images/',$eachline);
+                }
+
+                // SHOWED ON SCREEN
+                echo $eachline;
+                
             }
             fwrite($fp, $xhtml_footer);
             fclose($fp);            
