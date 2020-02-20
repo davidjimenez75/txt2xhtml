@@ -1,4 +1,4 @@
-# txt2xhtml v.2020-02-19
+# txt2xhtml
 
 Small PHP mini-website to convert plain text files (**.txt** and **.md**) to **.xhtml** files that can be easily added to EPUB creation software like [Calibre-editor](https://manual.calibre-ebook.com/edit.html) or [Sigil](https://sigil-ebook.com/).
 

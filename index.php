@@ -18,7 +18,7 @@ $option_new_page_after_every_file=true;  // new page after the content of every 
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>md2xhtml</title>
+        <title>txt2xhtml</title>
         
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
@@ -119,7 +119,7 @@ foreach ($lines as $key => $file)
 
 // TOC
 echo '<div id="toc" class="hidden-print">';
-echo "\r\n".'<h1><a href="./index.php">md2xhtml</a></h1>';
+echo "\r\n".'<h1><a href="./index.php">txt2xhtml <small><small>v2020-01-20</small></small></a></h1>';
 $line=0;
 $a_summary=explode("\r\n", $summary);
 foreach ($a_summary as $key=>$val)
