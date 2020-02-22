@@ -206,7 +206,9 @@ foreach ($a_summary as $key=>$val)
                 // CENTER ALL IMAGES?
                 if (substr_count($eachline, '<img ')>0)
                 {
-                   $eachline='<center>'.$eachline.'</center>';
+                   //$eachline='<center>'.$eachline.'</center>';
+                   //$eachline=str_replace('<img ','<img style="display:block;margin-left:auto;margin-right:auto" ',$eachline);
+                   $eachline=str_replace('<img ','<img class="center" ',$eachline);
                 }
                 // DOKUWIKI IMAGES
                 if (substr_count($eachline, '{{ :')>0)

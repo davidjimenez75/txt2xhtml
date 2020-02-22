@@ -182,3 +182,10 @@ blockquote {
 .tooltipped .tooltiptext {
     visibility: visible;
 }
+
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
