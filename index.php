@@ -5,14 +5,6 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 require_once 'config.php';
 require_once 'vendor/autoload.php';
-/**
- * CONFIG OPTIONS
- */
-$option_show_link_to_file=true; // show a red link on top of every file content (will be ignored on printing).
-$option_show_path_on_header=false; // show the filename path on the header (will be printed)
-$option_procces_txt_as_markdown=false; // process .txt files like as markdown
-$option_new_page_after_every_file=true;  // new page after the content of every file ( false = continuous content printing )
-
 ?><!DOCTYPE HTML>
 <html lang="es" class="sidebar-visible no-js">
     <head>
@@ -169,17 +161,35 @@ foreach ($a_summary as $key=>$val)
             if (substr($file,-3)==".md")
             { 
                 // MARKDOWN PARSED TO HTML
+                $output=str_replace("\r\n","\n",$output);
+                $output=str_replace("\r\n","\n",$output);
+                $output=str_replace("\n","\r\n",$output);
+                $output=str_replace("<code>","```",$output);
+                $output=str_replace("</code>","```",$output);                
                 $output= $Parsedown->text($output);
-                $output=str_replace("\n","\r\n",$output);// convert Mac/Linux to windows 
+                //$output=str_replace("\n","\r\n",$output);// convert Mac/Linux to windows 
             }
 
             // .TXT FILES
             // OPTIONAL - process .txt files like as markdown
             if ($option_procces_txt_as_markdown && (substr($file,-4)==".txt"))
             {
-                $output=str_replace("\r\n","\r\n\r\n",$output);
+                $output=str_replace("\r\n","\n",$output);
+                $output=str_replace("\r\n","\n",$output);
+                $output=str_replace("\n","\r\n",$output);
+                $output=str_replace("<code>","```",$output);
+                $output=str_replace("</code>","```",$output);
                 $output= $Parsedown->text($output);
+                //$output=str_replace("\n","\r\n",$output);// convert Mac/Linux to windows                 
+            }elseif ( ($option_procces_txt_as_markdown ==false)&& (substr($file,-4)==".txt") ) {
+                $output=str_replace("\r\n","\n",$output);
+                $output=str_replace("\r\n","\n",$output);
+                $output=str_replace("\n","<br>\r\n",$output);
+                //$output=str_replace("<code>","```",$output);
+                //$output=str_replace("</code>","```",$output);              
             }
+
+
 
 
 
@@ -189,20 +199,21 @@ foreach ($a_summary as $key=>$val)
             fwrite($fp, $xhtml_header);
                       
             // MODIFICATIONS PER LINE
-            $a_output=explode("\n",$output);// DONT CHANGE OR FAIL WITH MARKDOWN CODE LABELS
+            $a_output=explode("\r\n",$output);// DONT CHANGE OR FAIL WITH MARKDOWN CODE LABELS
             $output_temp="";
             foreach ($a_output as $key=>$eachline){        
 
                 // CENTER ALL IMAGES?
                 if (substr_count($eachline, '<img ')>0)
                 {
-                    $eachline='<center>'.$eachline.'</center>';
+                   $eachline='<center>'.$eachline.'</center>';
                 }
                 // DOKUWIKI IMAGES
                 if (substr_count($eachline, '{{ :')>0)
                 {
                     $eachline=str_replace('{{ :','<center><img src="./Images/',$eachline);
                     $eachline=str_replace('?400 |}}','"></center>',$eachline);
+                    $eachline=str_replace(' |}}','"></center>',$eachline);                    
                     $eachline=str_replace(':','/',$eachline);
                 }
 
@@ -222,13 +233,15 @@ foreach ($a_summary as $key=>$val)
                 // DOKUWIKI INDEX (REMOVED)
                 if (substr_count($eachline, '{{indexmenu')>0)
                 {
-                    $eachline="<p>&nbsp;</p>";
+                    //$eachline="<p>&nbsp;</p>";
+                    $eachline=preg_replace("/\{\{(.*?)\}\}/i", "", $eachline);
                 }
                 
                // TXT PROCESSING BEFORE SAVING TO XHTML
                if (substr($file,-4)==".txt")
                { 
-                   $eachline=nl2br($eachline);
+                   //$eachline=nl2br($eachline);
+                   //$eachline.="<br>";
                }
 
                 // SAVING XHTML                
